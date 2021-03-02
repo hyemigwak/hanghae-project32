@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>나의 여행지 어디 | 국내 여행지 기록</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"/>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <script src="https://kit.fontawesome.com/36fd530535.js" crossorigin="anonymous"></script>
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- 부트스트랩-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        .center {
+            text-align: center;
+        }
+
+        .star-list {
+            width: 500px;
+            margin: 20px auto 0 auto;
+        }
+
+        .card {
+            float: left;
+            margin-right: 15px;
+            margin-bottom: 25px;
+        }
+
+        .mypage {
+            padding: 0px 0px 0px 900px;
+        }
+
+    </style>
+    <script>
+        $(document).ready(function () {
+            showStar();
+        });
+
+        function showStar() {
+            $.ajax({
+                type: 'GET',
+                url: '/api/list?sample_give=샘플데이터',
+                data: {},
+                success: function (response) {
+                    let travel_final = response['travel']
+                    for (let i = 0; i < travel_final.length; i++) {
+                        let img_url = travel_final[i]['img_url']
+                        let place = travel_final[i]['place']
+                        let description = travel_final[i]['description']
+
+                        let temp_html = `<div class="card" style="width: 300px;">
+                   <img class="card-img-top" src="${img_url}" alt="여행지사진">
+                <div class="card-body">
+                    <h5 class="card-title">${place}</h5>
+                    <p class="card-text">${description}</p>
+                </div>
+            </div>`
+                        $('#star-box').append(temp_html)
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<section class="hero is-warning">
+    <div class="hero-body">
+        <h1 class="mypage"><a target="_blank" href="mypage.html"><i class="far fa-user fa-1x"></i>&nbsp&nbsp<a
+                target="_blank" href="login.html"><i class="fas fa-sign-in-alt fa-1x"></i></h1>
+        <div class="container center">
+            <h1 class="title">
+                국내여행지기록 🚌
+            </h1>
+            <h2 class="subtitle">
+                내가 좋아하는 국내 여행지를 기록하고 모아 볼 수 있어요!
+            </h2>
+        </div>
+    </div>
+</section>
+<div class="star-list" id="star-box">
+</div>
+</body>
+</html>
