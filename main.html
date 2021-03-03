@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <!-- Webpage Title -->
+    <title>국내여행지기록</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- 부트스트랩-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/1e07df1922.js" crossorigin="anonymous"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            showStar();
+        });
+
+        function likestar() {
+            $.ajax({
+                type: "POST",
+                url: "/api/like",
+                data: {sample_give: '샘플데이터'},
+                success: function (response) {
+                    alert(response["msg"]);
+                    console.log(response)
+                    window.location.reload();
+                }
+            })
+        }
+
+        function showStar() {
+            $.ajax({
+                type: 'GET',
+                url: '/api/list?sample_give=샘플데이터',
+                data: {},
+                success: function (response) {
+                    let travel_all = response['travel']
+                    for (let i = 0; i < travel_all.length; i++) {
+                        let img_url = travel_all[i]['img_url']
+                        let place = travel_all[i]['place']
+                        let description = travel_all[i]['description']
+
+                        let temp_html = `<div class="card" style="width: 300px; height:400px;">
+                                               <img class="card-img-top" src="${img_url}" alt="여행지사진">
+                                                 <div class="card-body">
+                                                <h5 class="card-title">${place}</h5>
+                                                <p class="card-text">${description}</p>
+                                                 </div>
+                                        </div>`
+                        $('#star-box').append(temp_html)
+                    }
+                }
+            });
+        }
+
+
+    </script>
+
+    <style>
+        .card {
+            float: left;
+            margin-right: 15px;
+            margin-bottom: 25px;
+        }
+
+        .cards {
+            margin: auto;
+            display: block;
+            width: 1000px;
+        }
+
+        .nav {
+            display: block;
+            margin: 0 auto 10px;
+            width: 900px;
+
+        }
+
+        .nav li:hover {
+            color: black;
+
+        }
+
+        .mypage {
+            float: right;
+            padding: 20px;
+            font-weight: bold;
+        }
+
+        .heart1 {
+            width: 45px;
+            height: 30px;
+            display: block;
+            float: left;
+        }
+
+        .black1 {
+            width: 45px;
+            height: 30px;
+            float: left;
+        }
+
+        .memo {
+            float: left;
+        }
+
+        .star-list {
+            width: 500px;
+            margin: 20px auto 0 auto;
+            display: inline;
+        }
+
+    </style>
+
+</head>
+<body>
+<a href="/mypage" class="mypage">MY PAGE</a>
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4">국내여행지기록</h1>
+        <p></p>
+        <p class="lead">내가 좋아하는 국내 여행지를 기록하고 모아 볼 수 있어요!</p>
+    </div>
+</div>
+<div class="nav">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/" class="home">전체</a>
+
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/서울">서울</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/경기">경기</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/부산">부산</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/제주">제주</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/경주">경주</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/강원">강원</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/기타">기타</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div class="cards">
+    <div class="star-list" id="star-box">
+        <div class="card" style="width: 300px; height:400px;">
+            <img class="card-img-top"
+                 src="http://file.instiz.net/data/file/20140708/a/3/6/a36d6ebd01b1dfe22e2a577b881631cc.png" width="50" alt="여행지사진">
+            <div class="card-body">
+                <h5 class="card-title">테스트</h5>
+                <p class="card-text">이것은 테스트</p>
+                <a class="level-item is-sparta" aria-label="heart" onclick="toggle_like('${post['_id']}', 'heart')">
+                    <span class="icon is-small"><i class="fa fa-heart" aria-hidden="true"></i></span>&nbsp;<span
+                        class="like-num">2.7k</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+</body>
+</html>
