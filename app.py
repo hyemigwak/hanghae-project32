@@ -13,8 +13,8 @@ app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
 
-client = MongoClient('mongodb://13.209.65.94', 27017, username="test", password="test")
-db = client.dbsparta_plus_week4
+client = MongoClient('localhost', 27017)
+db = client.dbsparta
 
 
 @app.route('/')
@@ -34,6 +34,12 @@ def home():
 def login():
     msg = request.args.get("msg")
     return render_template('login.html', msg=msg)
+
+@app.route('/mypage')
+def mypage():
+    msg = request.args.get("msg")
+    return render_template('mypage.html', msg=msg)
+
 
 
 @app.route('/user/<username>')
@@ -120,7 +126,11 @@ def get_posts():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        # 포스팅 목록 받아오기
+        posts = list(db.posts.find({}).sort("date", -1).limit(20))
+        for post in posts:
+            post["_id"] = str(post["_id"])
+            post["count_heart"] = db.likes.count_documents({"post_id": post["_id"], "type": "heart"})
+            post["heart_by_me"] = bool(db.likes.find_one({"post_id": post["_id"], "type": "heart", "username": payload['id']}))
         return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다."})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
@@ -131,11 +141,37 @@ def update_like():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        # 좋아요 수 변경
+        user_info = db.users.find_one({"username": payload["id"]})
+        post_id_receive = request.form["post_id_give"]
+        type_receive = request.form["type_give"]
+        action_receive = request.form["action_give"]
+        doc = {
+            "post_id": post_id_receive,
+            "username": user_info["username"],
+            "type": type_receive
+        }
+        if action_receive == "like":
+            db.likes.insert_one(doc)
+        else:
+            db.likes.delete_one(doc)
+        count = db.likes.count_documents({"post_id": post_id_receive, "type": type_receive})
+        return jsonify({"result": "success", 'msg': 'updated', "count": count})
         return jsonify({"result": "success", 'msg': 'updated'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
+# 좋아요 API 부분
+@app.route('/show_like', methods=['POST'])
+def show_like():
+    sample_receive = request.form['sample_give']
+    print(sample_receive)
+    return jsonify({'msg': '이 요청은 POST!'})
+
+# 지영님 여행 크롤링 API
+@app.route('/api/list', methods=['GET'])
+def show_stars():
+    travel = list(db.travel_final.find({},{'_id':False}))
+    return jsonify({'travel': travel})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

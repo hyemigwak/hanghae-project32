@@ -3,7 +3,7 @@
     <head>
 
         <!-- Webpage Title -->
-        <title>국내여행지기록</title>
+        <title> MY PAGE |국내여행지기록</title>
 
         <!-- Required meta tags -->
         <meta charset="utf-8">
@@ -27,50 +27,14 @@
 
 
         <script>
-        $(document).ready(function () {
-            showStar();
-        });
-         function likestar() {
-              $.ajax({
-                type: "POST",
-                url: "/api/like",
-                data: {sample_give: '샘플데이터'},
-                success: function (response) {
-                    alert(response["msg"]);
-                 console.log(response)
-                    window.location.reload();
-             }
-         })
-         }
 
-        function showStar() {
-            $.ajax({
-                type: 'GET',
-                url: '/api/list?sample_give=샘플데이터',
-                data: {},
-                success: function (response) {
-                    let travel_final = response['travel']
-                    for (let i = 0; i < travel_final.length; i++) {
-                        let img_url = travel_final[i]['img_url']
-                        let place = travel_final[i]['place']
-                        let description = travel_final[i]['description']
 
-                        let temp_html = `<div class="card" style="width: 300px; height:400px;">
-                                               <img class="card-img-top" src="${img_url}" alt="여행지사진">
-                                                 <div class="card-body">
-                                                <h5 class="card-title">${place}</h5>
-                                                <p class="card-text">${description}</p>
-                                                 </div>
-                                        </div>`
-                        $('#star-box').append(temp_html)
-                    }
-                }
+            $('#heart1').click(function (){
+               $('#heart1').attr('src',"/static/black.jpg");
             });
-        }
 
 
         </script>
-
         <style>
             .card {
                 float:left;
@@ -92,42 +56,25 @@
                 color:black;
 
             }
-            .mypage {
+            .gohome {
                 float:right;
                 padding:20px;
                 font-weight:bold;
             }
-            .heart1 {
-                width: 45px;
-                height: 30px;
-                display:block;
-                float:left;
-            }
-            .black1 {
-                width: 45px;
-                height: 30px;
-                float:left;
-            }
-            .memo {
-                float:left;
-            }
-
-            .star-list {
-                width: 500px;
-                margin: 20px auto 0 auto;
-                display:inline;
+            .container {
+                height: 100px;
             }
 
         </style>
 
     </head>
     <body>
-    <a href="/mypage" class="mypage">MY PAGE</a>
+    <a href="/" class="gohome">홈으로 돌아가기</a>
         <div class="jumbotron jumbotron-fluid">
             <div class="container">
-                <h1 class="display-4">국내여행지기록</h1>
+                <h1 class="display-4">마이페이지</h1>
                 <p></p>
-                <p class="lead">내가 좋아하는 국내 여행지를 기록하고 모아 볼 수 있어요!</p>
+                <p class="lead">내가 좋아요한 국내 여행지!</p>
             </div>
         </div>
         <div class="nav">
@@ -161,20 +108,15 @@
             </nav>
         </div>
         <div class="cards">
-            <div class="star-list" id="star-box">
-                <div class="card" style="width: 300px; height:400px;">
-                    <img class="card-img-top" src="http://file.instiz.net/data/file/20140708/a/3/6/a36d6ebd01b1dfe22e2a577b881631cc.png" alt="여행지사진">
-                    <div class="card-body">
-                        <h5 class="card-title">테스트</h5>
-                        <p class="card-text">이것은 테스트</p>
-                        <a class="level-item is-sparta" aria-label="heart" onclick="toggle_like('${post['_id']}', 'heart')">
-                        <span class="icon is-small"><i class="fa fa-heart" aria-hidden="true"></i></span>&nbsp;<span class="like-num">2.7k</span>
-                    </div>
+            <div class="card" style="width: 300px;">
+                <img class="card-img-top" src="https://t0.gstatic.com/images?q=tbn:ANd9GcR4M7tH5yBUQMCNAVdl4UN7-Ny0gVf6parM6fkhmCsbnYw8Hkcum2tDfmeYij4GU4EfThjQOoBvwh5IPtIBRy-koQ" alt="여행지사진">
+                <div class="card-body">
+                    <h5 class="card-title">잠실 롯데월드</h5>
+                    <p class="card-text">수족관이 있는 어드벤처 & 워터파크</p>
                 </div>
-                </div>
-
             </div>
         </div>
+
 
     </body>
 </html>
