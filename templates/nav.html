@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <!-- Webpage Title -->
+    <title>국내여행지기록</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- 부트스트랩-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/1e07df1922.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
+
+    <script>
+        let ggg = '{{ status }}'
+        function likestar() {
+            $.ajax({
+                type: "POST",
+                url: "/api/like",
+                data: {sample_give: '샘플데이터'},
+                success: function (response) {
+                    alert(response["msg"]);
+                    console.log(response)
+                    window.location.reload();
+                }
+            })
+        }
+
+            function toggle_like(post_id, type) {
+                console.log(post_id, type)
+                let $a_like = $(`#${post_id} a[aria-label='heart']`)
+                console.log($a_like)
+                let $i_like = $a_like.find("i")
+                if ($i_like.hasClass("fa-heart")) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/update_like",
+                        data: {
+                            post_id_give: post_id,
+                            type_give: type,
+                            action_give: "unlike"
+                        },
+                        success: function (response) {
+                            console.log("unlike")
+                            $i_like.addClass("fa-heart-o").removeClass("fa-heart")
+                            $a_like.find("span.like-num").text(response["count"])
+                        }
+                    })
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "/update_like",
+                        data: {
+                            post_id_give: post_id,
+                            type_give: type,
+                            action_give: "like"
+                        },
+                        success: function (response) {
+                            console.log("like")
+                            $i_like.addClass("fa-heart").removeClass("fa-heart-o")
+                            $a_like.find("span.like-num").text(response["count"])
+                        }
+                    })
+
+                }
+            }
+
+
+            function sign_out() {
+                $.removeCookie('mytoken', {path: '/'});
+                alert('로그아웃!')
+                window.location.href = "/login"
+            }
+
+
+    </script>
+
+    <style>
+        * {
+            font-family: 'Jua', sans-serif;
+        }
+        .card {
+            float: left;
+            margin-right: 15px;
+            margin-bottom: 25px;
+        }
+
+        .cards {
+            margin: auto;
+            display: block;
+            width: 1000px;
+        }
+
+        .nav li:hover {
+            color: black;
+        }
+
+        .mypage {
+            float: right;
+            padding: 20px;
+            font-weight: bold;
+            font-size: 25px;
+            color: black;
+            margin-right: 30px;
+        }
+         .jb-wrap {
+            position: relative;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+        .pic {
+            height:500px;
+            margin-top:0px;
+        }
+        .jb-wrap img {
+            width: 100%;
+        }
+        .jb-text {
+            width: 100%;
+            padding: 5px 10px;
+            text-align: center;
+            position: absolute;
+            top: 40%;
+            left: 0%;
+            transform: translate(0%, 0%);
+            color:white;
+            font-size:60px;
+        }
+        .lead {
+            color:white;
+            font-size:36px;
+        }
+        .body-top {
+            height:120px;
+        }
+        .level-item is-sparta {
+            padding:150px;
+        }
+        .nav-item {
+            padding:15px;
+            font-size:20px;
+        }
+        .nav-link {
+            text-align: center;
+        }
+        .nav-container {
+            display:flex;
+            justify-content:center;
+            flex-direction: row;
+            width: 100%;
+            margin:0;
+            padding:0;
+            list-style-type:none;
+        }
+        a:link {
+            color:black;
+        }
+        a:visited {
+            color:black;
+        }
+    </style>
+
+</head>
+<body>
+<div class="jb-wrap">
+    <img class="pic"
+         src="https://www.nps.gov/common/uploads/banner_image/imr/homepage/99556161-1DD8-B71B-0B896E4D786C6B47.jpg"
+         alt="배경화면">
+    <div class="jb-text">
+        <p>국내 여행지 기록
+            <p1>
+        <p></p>
+        <p class="lead">내가 좋아하는 국내 여행지를 기록하고 모아 볼 수 있어요!</p>
+    </div>
+</div>
+<a href="/user/{{ user_info.username }}" class="mypage">MY PAGE</a>
+<ul class="nav-container">
+    <li class="nav-item">
+        <a class="nav-link" href="/">전체</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/nav/seoul">서울</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/nav/gyeonggi">경기</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/nav/busan">부산</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/nav/jeju">제주</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/nav/gangwon">강원</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/nav/gyeongju">경주</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/nav/etc">기타</a>
+    </li>
+</ul>
+<div class=".imgswap" style="position: fixed; width: 50px; bottom: 50px; right: 50px;">
+    <a href="#"><img src="https://i.dlpng.com/static/png/6424612_preview.png"
+                     onmouseover="this.src='https://image.freepik.com/free-vector/flat-design-concept-rocket-launch_16734-61.jpg'"
+                     onmouseout="this.src='https://i.dlpng.com/static/png/6424612_preview.png'"></a>
+</div>
+<div class="cards">
+    {% for place in places %}
+        {% if place.location == location %}
+            <div class="card" style="width: 300px; height:400px;" id="{{ place._id }}">
+            <img class="card-img-top" src="{{ place.imageurl }}" style="width:300px; height:200px;" alt="여행지사진">
+                   <div class="card-body">
+                       <h5 class="card-title">{{ place.title }}</h5>
+                       <p class="card-text">{{ place.description }}</p>
+                       <p class="rate">평점: {{ place.rate }}</p>
+                       {% if place.like == 1 %}
+                           <a class="level-item is-sparta" aria-label="heart"
+                              onclick="toggle_like('{{ place._id }}', 'heart')">
+                               <i class="fa fa-heart" aria-hidden="true"></i>
+                           </a>
+                       {% else %}
+                           <a class="level-item is-sparta" aria-label="heart"
+                              onclick="toggle_like('{{ place._id }}', 'heart')">
+                               <i class="fa fa-heart-o" aria-hidden="true"></i>
+                           </a>
+                       {% endif %}
+                   </div>
+               </div>
+           {% endif %}
+       {% endfor %}
+   </div>
+
+</body>
+</html>
+
